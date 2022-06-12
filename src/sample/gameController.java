@@ -27,7 +27,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.ResourceBundle;
-import org.unibl.etf.shape.DiamondShape;
+
+import org.unibl.etf.shape.*;
+import org.unibl.etf.tools.*;
 
 
 public class gameController implements Initializable {
@@ -84,17 +86,16 @@ public class gameController implements Initializable {
 
 
    @FXML
-   void startClicked(ActionEvent event) { //exception za ponovno pokretanje ako vec igra traje
+   void startClicked(ActionEvent event) throws InterruptedException {//exception za ponovno pokretanje ako vec igra traje
+
         int min = 7;
        int max =10;
        int random=0;
        random=(int)Math.floor(Math.random()*(max-min+1)+min);
        int k=1;
 
-
-
-       for (int y = 0; y < random; y++) {
-           for (int x = 0; x < random; x++) {
+       for (int y = 0; y < 7; y++) {
+           for (int x = 0; x < 7; x++) {
 
                // Create a new TextField in each Iteration
                TextField tf = new TextField();
@@ -109,17 +110,20 @@ public class gameController implements Initializable {
                k++;
            }
        }
-       //matrixGame.setMinSize(500,500);
+
+
        matrixGame.setAlignment(Pos.CENTER);
 
-       DiamondShape d=new DiamondShape();
+       DiamondShape d=new DiamondShape(matrixGame);
 
-      /* List<Circle> circles = new ArrayList(); //prikaz figura kao krugova
+       /*List<Circle> circles = new ArrayList(); //prikaz figura kao krugova
        for (int i = 0; i < 7 * 7; i++) {
            circles.add(new Circle(10, Color.BLACK));
        }
-       d.addCirclesToGridPane(matrixGame, circles);
+
+       d.addCirclesToGridPane(matrixGame, circles,4,0);
        matrixGame.setPadding(new Insets(20, 20, 20, 20));*/
+
 
 
       /* List<Rectangle> recs = new ArrayList(); //prikaz rupa
