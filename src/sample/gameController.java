@@ -94,8 +94,8 @@ public class gameController implements Initializable {
        random=(int)Math.floor(Math.random()*(max-min+1)+min);
        int k=1;
 
-       for (int y = 0; y < 7; y++) {
-           for (int x = 0; x < 7; x++) {
+       for (int y = 0; y < 8; y++) {
+           for (int x = 0; x < 8; x++) {
 
                // Create a new TextField in each Iteration
                TextField tf = new TextField();
@@ -112,9 +112,17 @@ public class gameController implements Initializable {
        }
 
 
+       List<Circle> circles = new ArrayList(); //prikaz figura kao krugova
+       for (int i = 0; i < 7 * 7; i++) {
+           circles.add(new Circle(10, Color.BLACK));
+       }
+
        matrixGame.setAlignment(Pos.CENTER);
 
        DiamondShape d=new DiamondShape(matrixGame);
+
+      // List<Tuple<Integer, Integer>> lista=d.getMovementsEven();
+       //d.addCirclesToGridPane(matrixGame,circles,lista.get(0).getItem1(),lista.get(0).getItem2());
 
        /*List<Circle> circles = new ArrayList(); //prikaz figura kao krugova
        for (int i = 0; i < 7 * 7; i++) {

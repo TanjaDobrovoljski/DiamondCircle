@@ -22,227 +22,149 @@ import javax.xml.transform.stream.StreamResult;
 import java.io.Serializable;
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
-public class DiamondShape implements Serializable
-{
 
-    public GridPane matrix;
-    private List<Tuple<Integer,Integer>> movements;
+public class DiamondShape implements Serializable {
 
-    public DiamondShape(GridPane matrix)
-    {
-        this.matrix=matrix;
+    private GridPane matrix;
+    private static List<Tuple<Integer, Integer>> movementsOdd;
+    private static List<Tuple<Integer, Integer>> movementsEven;
 
+    public DiamondShape(GridPane matrix) {
+        this.matrix = matrix;
 
         diamondSpiral(matrix);
     }
 
+    public GridPane getMatrix() {
+        return matrix;
+    }
 
-        public void spiralDiamondView(GridPane matrix,
-                                      int x, int y, int m, int n, int k)
-        {
-            List<Circle> circles = new ArrayList(); //prikaz figura kao krugova
-            for (int i = 0; i < 100; i++) {
-                circles.add(new Circle(10, Color.BLACK));
-            }
-            if(m%2==0)
-            {// Get middle column
-                int midCol = y + ((n - y) / 2);
-                int midRow = midCol;
-                // Case A
-                // ----------
-                //      P1
-                //       \
-                //        \
-                //         \
-                //          P2
-                for (int i = midCol, j = 0;
-                     i < n && k > 0; ++i, k--, j++) {
-                    addCirclesToGridPane(matrix, circles, x + j, i);// matrix[x + j][i]
-                }
-                // Case B
-                // -----------
-                //      P1
-                //
-                //
-                //
-                //          P2
-                //          /
-                //         /
-                //        /
-                //       P3
-                for (int i = n, j = 0;
-                     i >= midCol && k > 0; --i, k--, j++) {
-                    addCirclesToGridPane(matrix, circles, (midRow) + j, i);// matrix[(midRow) + j][i]);
-                }
-                // Case C
-                // ---------------
-                //      P1
-                //
-                //
-                //
-                // p4        P2
-                //   \
-                //    \
-                //     \
-                //      P3
-                for (int i = midCol - 1, j = 1;
-                     i >= y && k > 0; --i, k--, j++) {
-                    addCirclesToGridPane(matrix, circles, (n) - j, i);//matrix[(n) - j][i]);
-                }
-                // Case D
-                // -----------------
-                //      P1
-                //    /
-                //   /
-                //  /
-                // P4        P2
-                //
-                //
-                //
-                //      P3
-                for (int i = y + 1, j = 1;
-                     i < midCol && k > 0; ++i, k--, j++) {
-                    addCirclesToGridPane(matrix, circles, (midRow) - j, i);//matrix[(midRow) - j][i]);
-                }
-                if (x + 1 <= m - 1 && k > 0) {
-                    // Recursive call
-                    spiralDiamondView(matrix, x + 1,
-                            y + 1, m - 1, n - 1, k);
-                }
-            }
-            else{
-                /*
+    public void setMatrix(GridPane matrix) {
+        this.matrix = matrix;
+    }
+
+    public List<Tuple<Integer, Integer>> getMovementsOdd() {
+        return movementsOdd;
+    }
+
+    public void setMovementsOdd(List<Tuple<Integer, Integer>> movementsOdd) {
+        this.movementsOdd = movementsOdd;
+    }
+
+    public List<Tuple<Integer, Integer>> getMovementsEven() {
+        return movementsEven;
+    }
+
+    public void setMovementsEven(List<Tuple<Integer, Integer>> movementsEven) {
+        this.movementsEven = movementsEven;
+    }
+
+    public void spiralDiamondViewOdd(GridPane matrix,
+                                     int x, int y, int m, int n, int k, List<Tuple<Integer,Integer>> movements) { //7x7
+        List<Circle> circles = new ArrayList(); //prikaz figura kao krugova
+        for (int i = 0; i < 100; i++) {
+            circles.add(new Circle(10, Color.BLACK));
+        }
+        Tuple<Integer,Integer> movement;
+        //Get middle column
+        int midCol = y + ((n - y) / 2);
+        int midRow = midCol;
+
+        for (int i = midCol, j = 0;
+             i < n && k > 0; ++i, k--, j++) {
+            movement = new Tuple<>();
+            movement.setItems(x + j, i);
+            movements.add( movement);
+            //addCirclesToGridPane(matrix, circles, x + j, i);// matrix[x + j][i]
+        }
+
+        for (int i = n, j = 0;
+             i >= midCol && k > 0; --i, k--, j++) {
+            movement = new Tuple<>();
+            movement.setItems((midRow) + j, i);
+            movements.add( movement);
+            // addCirclesToGridPane(matrix, circles, (midRow) + j, i);// matrix[(midRow) + j][i]);
+        }
+
+
+        for (int i = midCol - 1, j = 1;
+             i >= y && k > 0; --i, k--, j++) {
+            movement = new Tuple<>();
+            movement.setItems( (n) - j, i);
+            movements.add( movement);
+            //addCirclesToGridPane(matrix, circles, (n) - j, i);//matrix[(n) - j][i]);
+        }
+
+        for (int i = y + 1, j = 1;
+             i < midCol && k > 0; ++i, k--, j++) {
+            movement = new Tuple<>();
+            movement.setItems((midRow) - j, i);
+            movements.add( movement);
+            //addCirclesToGridPane(matrix, circles, (midRow) - j, i);//matrix[(midRow) - j][i]);
+        }
+        if (x + 1 <= m - 1 && k > 0) {
+            // Recursive call
+            spiralDiamondViewOdd(matrix, x + 1,
+                    y + 1, m - 1, n - 1, k,movements);
+        }
+    }
+
+    public void spiralDiamondViewEven(GridPane matrix,
+                                  int x, int y, int m, int n, int k,List<Tuple<Integer,Integer>> movements) //8x8
+    {
+        List<Circle> circles = new ArrayList(); //prikaz figura kao krugova
+        for (int i = 0; i < 100; i++) {
+            circles.add(new Circle(10, Color.BLACK));
+        }
+
+        Tuple<Integer,Integer> movement;
                 // Get middle column
                 int midCol = y + ((n - y) / 2);
                 int midRow = midCol;
-                // Case A
-                // ----------
-                //      P1
-                //       \
-                //        \
-                //         \
-                //          P2
+
                 for (int i = midCol, j = 0;
                      i <= n && k > 0; ++i, k--, j++) {
-                    addCirclesToGridPane(matrix, circles, x + j, i);// matrix[x + j][i]
+                    movement = new Tuple<>();
+                    movement.setItem1(x+j);
+                    movement.setItem2(i);
+                    movements.add(movement); //addCirclesToGridPane(matrix, circles, x + j, i);// matrix[x + j][i]
                 }
-                // Case B
-                // -----------
-                //      P1
-                //
-                //
-                //
-                //          P2
-                //          /
-                //         /
-                //        /
-                //       P3
+
                 for (int i = n, j = 0;
                      i-1 > midCol && k > 0; --i, k--, j++) {
-                    addCirclesToGridPane(matrix, circles, (midRow) + j+2, i-1);// matrix[(midRow) + j][i]);
+                    movement = new Tuple<>();
+                    movement.setItems((midRow) + j+2, i-1);
+                    movements.add( movement);
+                    //addCirclesToGridPane(matrix, circles, (midRow) + j+2, i-1);// matrix[(midRow) + j][i]);
                 }
-                // Case C
-                // ---------------
-                //      P1
-                //
-                //
-                //
-                // p4        P2
-                //   \
-                //    \
-                //     \
-                //      P3
+
                 for (int i = midCol - 1, j = 1;
                      i+1 >= y && k > 0; --i, k--, j++) {
-                    addCirclesToGridPane(matrix, circles, (n) - j, i+1);//matrix[(n) - j][i]);
+                    movement = new Tuple<>();
+                    movement.setItems((n) - j, i+1);
+                    movements.add(movement);
+                    //addCirclesToGridPane(matrix, circles, (n) - j, i+1);//matrix[(n) - j][i]);
                 }
-                // Case D
-                // -----------------
-                //      P1
-                //    /
-                //   /
-                //  /
-                // P4        P2
-                //
-                //
-                //
-                //      P3
+
                 for (int i = y + 1, j = 1;
                      i < midCol && k > 0; ++i, k--, j++) {
-                    addCirclesToGridPane(matrix, circles, (midRow) - j, i);//matrix[(midRow) - j][i]);
-                }*/
-
-                // Get middle column
-
-                int midCol = y + ((n+1 - y) / 2);
-                int midRow = midCol;
-                // Case A
-                // ----------
-                //      P1
-                //       \
-                //        \
-                //         \
-                //          P2
-                for (int i = midCol, j = 0;
-                     i < n && k > 0; ++i, k--, j++) {
-                    addCirclesToGridPane(matrix, circles, x + j, i);// matrix[x + j][i]
+                    movement = new Tuple<>();
+                    movement.setItems((midRow) - j, i);
+                    movements.add(movement);
+                    //addCirclesToGridPane(matrix, circles, (midRow) - j, i);//matrix[(midRow) - j][i]);
                 }
-                // Case B
-                // -----------
-                //      P1
-                //
-                //
-                //
-                //          P2
-                //          /
-                //         /
-                //        /
-                //       P3
-                for (int i = n, j = 0;
-                     i >= midCol && k > 0; --i, k--, j++) {
-                    addCirclesToGridPane(matrix, circles, (midRow) + j, i);// matrix[(midRow) + j][i]);
-                }
-                // Case C
-                // ---------------
-                //      P1
-                //
-                //
-                //
-                // p4        P2
-                //   \
-                //    \
-                //     \
-                //      P3
-                for (int i = midCol - 1, j = 1;
-                     i >= y && k > 0; --i, k--, j++) {
-                    addCirclesToGridPane(matrix, circles, (n) - j, i);//matrix[(n) - j][i]);
-                }
-                // Case D
-                // -----------------
-                //      P1
-                //    /
-                //   /
-                //  /
-                // P4        P2
-                //
-                //
-                //
-                //      P3
-                for (int i = y + 1, j = 1;
-                     i < midCol && k > 0; ++i, k--, j++) {
-                    addCirclesToGridPane(matrix, circles, (midRow) - j, i);//matrix[(midRow) - j][i]);
-                }
-
                 if (x + 1 <= m - 1 && k > 0) {
                     // Recursive call
-                    spiralDiamondView(matrix, x + 1,
-                            y + 1, m - 1, n - 1, k);
+                    spiralDiamondViewEven(matrix, x +1,
+                            y +1, m - 1, n - 1, k,movements);
                 }
 
+
             }
-        }
+
 
         public void diamondSpiral(GridPane matrix)
         {
@@ -254,9 +176,17 @@ public class DiamondShape implements Serializable
                 System.out.println("\nNot  odd square matrix");
                 return;
             }
-            // Print result
-            spiralDiamondView(matrix, 0, 0, row - 1,
-                    col - 1, (row * col) - ((col + 1) / 2) * 4);
+            if(row%2==0)
+            {
+                movementsEven=new LinkedList<>();
+                spiralDiamondViewEven(matrix, 0, 0, row - 1,
+                    col - 1, (row * col) - ((col + 1) / 2) * 4,movementsEven);}
+            else {
+                movementsOdd=new LinkedList<>();
+                spiralDiamondViewOdd(matrix, 0, 0, row - 1,
+                        col - 1, (row * col) - ((col + 1) / 2) * 4,movementsOdd);
+            }
+
 
         }
 
@@ -275,39 +205,5 @@ public class DiamondShape implements Serializable
             gridPane.add(rects.get(i), i % 7, i / 7);
         }
     }
-
-    public Node getNodeByRowColumnIndex ( int row,  int column, GridPane gridPane) {
-
-            Node result = null;
-        ObservableList<Node> childrens = gridPane.getChildren();
-
-        for (Node node : childrens) {
-            if(gridPane.getRowIndex(node) == row && gridPane.getColumnIndex(node) == column) {
-                result = node;
-
-                //result.setStyle("-fx-bar-fill: red;");
-                break;
-            }
-        }
-
-
-        return result;
-    }
-
-
-        public void gridToMatrix(GridPane g)
-        {
-            int[][] matrix=new int[g.getRowCount()][g.getColumnCount()];
-            int x=0;
-            int y=0;
-
-            for (Node node : g.getChildren()) {
-                {
-
-                }
-            }
-            //return null;
-        }
-
 
 }
