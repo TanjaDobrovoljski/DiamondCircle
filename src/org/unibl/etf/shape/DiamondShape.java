@@ -190,20 +190,21 @@ public class DiamondShape implements Serializable {
 
         }
 
-    private static int s=0;
+    private static int c=0;
     public void addCirclesToGridPane(GridPane gridPane, List<Circle> circles,int a,int b) //dodavanje figura kao krugova
     {
 
-            gridPane.add(circles.get(s), b,a);
-            s++;
+            gridPane.add(circles.get(c), b,a);
+            c++;
 
     }
 
-    public void addRectangleToGridPane(GridPane gridPane, List<Rectangle> rects) //dodavanje rupa kao krugova
+    private static int r=0;
+    public void addRectangleToGridPane(GridPane gridPane, Rectangle rects,int a, int b) //dodavanje rupa kao krugova
     {
-        for (int i = 0; i < 7 * 7; i++) {
-            gridPane.add(rects.get(i), i % 7, i / 7);
-        }
+        gridPane.add(rects,a,b);
+        r++;
+
     }
 
 }

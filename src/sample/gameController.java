@@ -2,6 +2,7 @@ package sample;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.fxml.LoadException;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -9,6 +10,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
@@ -17,24 +19,28 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
+import org.unibl.etf.appendices.*;
+
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
+
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.ResourceBundle;
+import java.util.*;
 
 import org.unibl.etf.shape.*;
 import org.unibl.etf.tools.*;
+import org.unibl.etf.game.cards.*;
 
 
 public class gameController implements Initializable {
 
 
+
+    @FXML
+    private ImageView cardImage;
 
     @FXML
     private Label title;
@@ -61,9 +67,6 @@ public class gameController implements Initializable {
     private Label vrijemeLabel;
 
     @FXML
-    private ImageView cardImage;
-
-    @FXML
     private Label opisKarte;
 
     @FXML
@@ -79,6 +82,11 @@ public class gameController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
+        OrdinaryCard o=new OrdinaryCard(4);
+
+        Image imProfile = new Image(getClass().getResourceAsStream(o.getSlika())); //ucitavanje slike
+        cardImage.setImage(imProfile);
+
 
     }
 
@@ -87,6 +95,8 @@ public class gameController implements Initializable {
 
    @FXML
    void startClicked(ActionEvent event) throws InterruptedException {//exception za ponovno pokretanje ako vec igra traje
+
+
 
         int min = 7;
        int max =10;
@@ -120,6 +130,7 @@ public class gameController implements Initializable {
        matrixGame.setAlignment(Pos.CENTER);
 
        DiamondShape d=new DiamondShape(matrixGame);
+
 
       // List<Tuple<Integer, Integer>> lista=d.getMovementsEven();
        //d.addCirclesToGridPane(matrixGame,circles,lista.get(0).getItem1(),lista.get(0).getItem2());
