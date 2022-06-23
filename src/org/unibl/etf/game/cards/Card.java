@@ -1,7 +1,10 @@
 package org.unibl.etf.game.cards;
 
-public abstract class Card {
+import java.io.Serializable;
+
+public abstract class Card implements Serializable {
     protected String image;
+
 
     public Card ()
     {

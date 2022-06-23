@@ -30,6 +30,7 @@ import javax.swing.table.TableColumnModel;
 import java.net.URL;
 import java.util.*;
 
+import org.unibl.etf.game.figures.Figure;
 import org.unibl.etf.shape.*;
 import org.unibl.etf.tools.*;
 import org.unibl.etf.game.cards.*;
@@ -86,6 +87,7 @@ public class gameController implements Initializable {
 
         Image imProfile = new Image(getClass().getResourceAsStream(o.getSlika())); //ucitavanje slike
         cardImage.setImage(imProfile);
+        Deck gameDeck=new Deck();
 
 
     }
@@ -95,7 +97,6 @@ public class gameController implements Initializable {
 
    @FXML
    void startClicked(ActionEvent event) throws InterruptedException {//exception za ponovno pokretanje ako vec igra traje
-
 
 
         int min = 7;
@@ -130,7 +131,7 @@ public class gameController implements Initializable {
        matrixGame.setAlignment(Pos.CENTER);
 
        DiamondShape d=new DiamondShape(matrixGame);
-
+       Figure f=new Figure();
 
       // List<Tuple<Integer, Integer>> lista=d.getMovementsEven();
        //d.addCirclesToGridPane(matrixGame,circles,lista.get(0).getItem1(),lista.get(0).getItem2());
