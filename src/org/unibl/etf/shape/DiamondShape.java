@@ -7,11 +7,16 @@ import javafx.scene.Node;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 
+
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
+import org.unibl.etf.game.figures.Figure;
+import org.unibl.etf.tools.GenLogger;
 import org.unibl.etf.tools.Tuple;
+import sample.gameController;
+
 
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
@@ -24,29 +29,52 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import  org.unibl.etf.tools.*;
+
+import static sample.gameController.playField;
 
 
 public class DiamondShape implements Serializable {
 
-    private GridPane matrix;
-    private static List<Tuple<Integer, Integer>> movementsOdd;
-    private static List<Tuple<Integer, Integer>> movementsEven;
 
-    public DiamondShape(GridPane matrix) {
-        this.matrix = matrix;
+    private static List<Tuple<Integer, Integer>> movementsOdd; //neparni
+    private static List<Tuple<Integer, Integer>> movementsEven; //parni
+    public static int matrixSize;
+    public static int random=0;
 
-        diamondSpiral(matrix);
+
+    public DiamondShape() {
+
+
+        int min = 7;
+        int max =10;
+
+        if(random==0)
+        random=(int)Math.floor(Math.random()*(max-min+1)+min);
+        // DiamondShape.matrixSize=7;
+        int k=1;
+        for (int y = 0; y < random; y++) {
+            for (int x = 0; x < random; x++) {
+
+                // Create a new TextField in each Iteration
+                TextField tf = new TextField();
+                tf.setPrefHeight(170);
+                tf.setPrefWidth(170);
+                tf.setAlignment(Pos.CENTER);
+                tf.setEditable(true);
+                tf.setText(String.valueOf(k));
+                playField.setRowIndex(tf, y);
+                playField.setColumnIndex(tf, x);
+                playField.add(tf, x, y);
+                k++;
+            }
+        }
+        playField.setAlignment(Pos.CENTER);
+        matrixSize=playField.getColumnCount();
+        diamondSpiral(playField);
     }
 
-    public GridPane getMatrix() {
-        return matrix;
-    }
-
-    public void setMatrix(GridPane matrix) {
-        this.matrix = matrix;
-    }
-
-    public List<Tuple<Integer, Integer>> getMovementsOdd() {
+    public static List<Tuple<Integer, Integer>> getMovementsOdd() {
         return movementsOdd;
     }
 
@@ -54,7 +82,7 @@ public class DiamondShape implements Serializable {
         this.movementsOdd = movementsOdd;
     }
 
-    public List<Tuple<Integer, Integer>> getMovementsEven() {
+    public static List<Tuple<Integer, Integer>> getMovementsEven() {
         return movementsEven;
     }
 
@@ -64,10 +92,6 @@ public class DiamondShape implements Serializable {
 
     public void spiralDiamondViewOdd(GridPane matrix,
                                      int x, int y, int m, int n, int k, List<Tuple<Integer,Integer>> movements) { //7x7
-        List<Circle> circles = new ArrayList(); //prikaz figura kao krugova
-        for (int i = 0; i < 100; i++) {
-            circles.add(new Circle(10, Color.BLACK));
-        }
         Tuple<Integer,Integer> movement;
         //Get middle column
         int midCol = y + ((n - y) / 2);
@@ -115,10 +139,6 @@ public class DiamondShape implements Serializable {
     public void spiralDiamondViewEven(GridPane matrix,
                                   int x, int y, int m, int n, int k,List<Tuple<Integer,Integer>> movements) //8x8
     {
-        List<Circle> circles = new ArrayList(); //prikaz figura kao krugova
-        for (int i = 0; i < 100; i++) {
-            circles.add(new Circle(10, Color.BLACK));
-        }
 
         Tuple<Integer,Integer> movement;
                 // Get middle column
@@ -169,8 +189,8 @@ public class DiamondShape implements Serializable {
         public void diamondSpiral(GridPane matrix)
         {
             // Get the size
-            int row = matrix.getRowCount();
-            int col = matrix.getColumnCount(); //matrix[0].length;
+            int row = playField.getRowCount();
+            int col = playField.getColumnCount(); //matrix[0].length;
             if (row != col )
             {
                 System.out.println("\nNot  odd square matrix");
@@ -179,11 +199,11 @@ public class DiamondShape implements Serializable {
             if(row%2==0)
             {
                 movementsEven=new LinkedList<>();
-                spiralDiamondViewEven(matrix, 0, 0, row - 1,
+                spiralDiamondViewEven(playField, 0, 0, row - 1,
                     col - 1, (row * col) - ((col + 1) / 2) * 4,movementsEven);}
             else {
                 movementsOdd=new LinkedList<>();
-                spiralDiamondViewOdd(matrix, 0, 0, row - 1,
+                spiralDiamondViewOdd(playField, 0, 0, row - 1,
                         col - 1, (row * col) - ((col + 1) / 2) * 4,movementsOdd);
             }
 
@@ -191,16 +211,44 @@ public class DiamondShape implements Serializable {
         }
 
     private static int c=0;
-    public void addCirclesToGridPane(GridPane gridPane, List<Circle> circles,int a,int b) //dodavanje figura kao krugova
+    public  void addCirclesToGridPane(List<Circle> circles, int a, int b) //dodavanje figura kao krugova
     {
-
-            gridPane.add(circles.get(c), b,a);
-            c++;
+        playField.add(circles.get(c), b,a);
+                    c++;
 
     }
 
+    public static   void drawMatrix(int xCoordinate,int yCoordinate)
+    {
+        List<Circle> circles = new ArrayList(); //prikaz figura kao krugova
+        for (int j = 0; j < 1; j++) {
+            circles.add(new Circle(1, Figure.getColor()));
+        }
+        /*playField.getChildren().clear();
+        int k=1;
+        for (int y = 0; y < random; y++) {
+            for (int x = 0; x < random; x++) {
+
+                // Create a new TextField in each Iteration
+                TextField tf = new TextField();
+
+                tf.setAlignment(Pos.CENTER);
+                tf.setEditable(true);
+                tf.setText(String.valueOf(k));
+                playField.setRowIndex(tf, y);
+                playField.setColumnIndex(tf, x);
+                playField.add(tf, x, y);
+                k++;
+            }
+        }*/
+        playField.add(circles.get(c), xCoordinate,yCoordinate);
+        c=0;
+
+    }
+
+
     private static int r=0;
-    public void addRectangleToGridPane(GridPane gridPane, Rectangle rects,int a, int b) //dodavanje rupa kao krugova
+    public void addRectangleToGridPane(GridPane gridPane, Rectangle rects,int a, int b) //dodavanje rupa
     {
         gridPane.add(rects,a,b);
         r++;

@@ -1,5 +1,7 @@
 package org.unibl.etf.game.figures;
 
+import javafx.application.Platform;
+import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 
 import org.unibl.etf.shape.DiamondShape;
@@ -12,20 +14,23 @@ import java.util.Date;
 import java.util.List;
 import java.util.Timer;
 
-public class Figure  implements Serializable {
-    private static Integer idCounter = 0,uniqueID;
+public class Figure extends Thread  implements Serializable {
+    private static Integer idCounter = 1,uniqueID;
     private static int Id=1;
 
     private boolean hasDiamond;
     private static List<Tuple<Integer, Integer>> futureMovements,passedMovements;
-    private int numOdDiamons;
+    private int numOfDiamonds;
     private long startTime;
-    private  static Color color = null;
+    private static  Color color ;
+
+
 
 
 
     public Figure()
     {
+
         uniqueID=idCounter++;
         if(Id==1)
         { color=Color.RED;
@@ -44,30 +49,50 @@ public class Figure  implements Serializable {
             Id = 1;
         }
 
-          this.numOdDiamons=0;
+          this.numOfDiamonds=0;
           this.hasDiamond=false;
-
-        new Thread(() -> {
-           startTime=new Date().getTime();
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    GenLogger.log(Figure.class, e);
-                }
-
-        }).start();
     }
 
 
+   @Override
+    public  void  run()
+    {
+        System.out.println("pokrenuta jeee");/////////////////////////
+       // Runnable task = () -> {
+          //  Platform.startup(() -> {
+        Platform.runLater(() -> {
+
+                long time=new Date().getTime();
+                Figure.setFutureMovements((DiamondShape.matrixSize)%2==0 ? DiamondShape.getMovementsEven():DiamondShape.getMovementsOdd());
+                while(true){
+                try {
+                     for (Tuple<Integer,Integer> lista:getFutureMovements())
+                     {System.out.println("radi");
+                          DiamondShape.drawMatrix(lista.getItem1(),lista.getItem2());
+                         System.out.println("poslije");
+                        try {
+                            sleep(1000);
+                        }
+                        catch (InterruptedException e)
+                        {e.printStackTrace();}
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                System.out.println("I'm running later...");
+            }});
+        };
 
 
 
-    public static Color getColor() {
+
+    public static  Color getColor() {
         return color;
     }
 
-    public static void setColor(Color color) {
-        Figure.color = color;
+    public  void setColor(Color color) {
+        this.color = color;
     }
 
     public boolean isHasDiamond() {
@@ -94,12 +119,12 @@ public class Figure  implements Serializable {
         Figure.passedMovements = passedMovements;
     }
 
-    public int getNumOdDiamons() {
-        return numOdDiamons;
+    public int getNumOfDiamons() {
+        return numOfDiamonds;
     }
 
-    public void setNumOdDiamons(int numOdDiamons) {
-        this.numOdDiamons = numOdDiamons;
+    public void setNumOfDiamons(int numOdDiamons) {
+        this.numOfDiamonds = numOdDiamons;
     }
 
     public long getStartTime() {
