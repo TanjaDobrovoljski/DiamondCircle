@@ -1,43 +1,27 @@
 package sample;
-import com.sun.javafx.menu.MenuBase;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.fxml.LoadException;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.RowConstraints;
+
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-import javafx.scene.shape.Rectangle;
-import javafx.stage.Stage;
-import org.unibl.etf.appendices.*;
+import org.unibl.etf.tools.Tuple;
 
-
-import javax.swing.*;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableColumnModel;
 
 import java.net.URL;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
 
 import org.unibl.etf.game.figures.Figure;
 import org.unibl.etf.shape.*;
-import org.unibl.etf.tools.*;
 import org.unibl.etf.game.cards.*;
 
 
@@ -98,14 +82,14 @@ public class gameController implements Initializable {
 
     }
 
-    public static GridPane getMatrix()
+    public  GridPane getMatrix()
     {
-        return  playField;
+        return  matrixGame;
     }
 
-    public static void setMatrix(GridPane matrix)
+    public  void setMatrix(GridPane matrix)
     {
-        playField=matrix;
+        matrixGame=matrix;
     }
 
 
@@ -181,10 +165,18 @@ public class gameController implements Initializable {
             circles.add(new Circle(10, Color.BLACK));
         }
         d.addCirclesToGridPane( circles,4,0);*/
+        Figure f1=new Figure(d);
+        new Thread(()->{
+            statusBarShow();
+        }).start();
 
-       Figure f=new Figure();
-        f.setDaemon(true);
-        f.start();
+
+      //  f1.test();
+
+
+      // Figure f=new Figure();
+        //f.setDaemon(true);
+        //f.start();
 
        /*List<Circle> circles = new ArrayList(); //prikaz figura kao krugova
         for (int i = 0; i < 7 * 7; i++) {
@@ -208,8 +200,67 @@ public class gameController implements Initializable {
        matrixGame.setPadding(new Insets(20, 20, 20, 20));*/
         matrixGame.setGridLinesVisible(true);
 
+
+    }
+static int k=0;
+private void statusBarShow() {
+
+    List<Circle> circles = new ArrayList(); //prikaz figura kao krugova
+    for (int j = 0; j < 100; j++) {
+        circles.add(new Circle(10, Color.BLACK));
     }
 
+    for (int i = 0; i < Figure.getFutureMovements().size(); i++)
+    {
+        try {
+            Platform.runLater(() -> {
+                DiamondShape.drawMatrix( Figure.getFutureMovements().get(k).getItem1(),Figure.getFutureMovements().get(k).getItem2() );
+                k++;
+            });
+
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+        }
+
+
+
+    catch(Exception e){
+        e.printStackTrace();
+    }
+}
+
+    }
+
+           /* Platform.runLater(()->DiamondShape.drawMatrix(0,6));
+        Thread.sleep(2000);
+            Platform.runLater(()->DiamondShape.drawMatrix(0,7));
+        Thread.sleep(2000);
+
+
+    } catch (Exception e) {
+        e.printStackTrace();
+    }*/
+
+
+
+     public void testThread() throws InterruptedException {
+              Thread myThread = new Thread(new Runnable() {
+        @Override
+             public void run() {
+                                 System.out.println("I am an asynchronous task");
+                                 System.out.println("and JUnit won't wait for me to finish my job!");
+
+                           }
+         });
+                 myThread.start();
+                 System.out.println("Let's wait for child threads to finish");
+                 Thread.sleep(5000);
+
+             }
 
 
     private void showMatrix() {
