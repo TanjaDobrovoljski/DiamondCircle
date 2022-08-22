@@ -219,7 +219,7 @@ private void statusBarShow() {
             });
 
             try {
-                Thread.sleep(2000);
+                Thread.sleep(700);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

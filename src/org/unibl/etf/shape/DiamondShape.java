@@ -44,6 +44,7 @@ public class DiamondShape implements Serializable {
     public static int random=0;
 
 
+
     public DiamondShape() {
 
 
@@ -114,6 +115,7 @@ public class DiamondShape implements Serializable {
              i < n && k > 0; ++i, k--, j++) {
             movement = new Tuple<>();
             movement.setItems(x + j, i);
+
             movements.add( movement);
             //addCirclesToGridPane(circles, x + j, i);// matrix[x + j][i]
         }
@@ -122,6 +124,7 @@ public class DiamondShape implements Serializable {
              i >= midCol && k > 0; --i, k--, j++) {
             movement = new Tuple<>();
             movement.setItems((midRow) + j, i);
+
             movements.add( movement);
             // addCirclesToGridPane(matrix, circles, (midRow) + j, i);// matrix[(midRow) + j][i]);
         }
@@ -131,6 +134,7 @@ public class DiamondShape implements Serializable {
              i >= y && k > 0; --i, k--, j++) {
             movement = new Tuple<>();
             movement.setItems( (n) - j, i);
+
             movements.add( movement);
             //addCirclesToGridPane(matrix, circles, (n) - j, i);//matrix[(n) - j][i]);
         }
@@ -139,6 +143,7 @@ public class DiamondShape implements Serializable {
              i < midCol && k > 0; ++i, k--, j++) {
             movement = new Tuple<>();
             movement.setItems((midRow) - j, i);
+
             movements.add( movement);
             //addCirclesToGridPane(matrix, circles, (midRow) - j, i);//matrix[(midRow) - j][i]);
         }
@@ -150,7 +155,7 @@ public class DiamondShape implements Serializable {
     }
 
     public void spiralDiamondViewEven(GridPane matrix,
-                                  int x, int y, int m, int n, int k,List<Tuple<Integer,Integer>> movements) //8x8
+                                  int x, int y, int m, int n, int k,List<Tuple<Integer,Integer>> movements,int size) //8x8
     {
 
         Tuple<Integer,Integer> movement;
@@ -159,44 +164,62 @@ public class DiamondShape implements Serializable {
                 int midRow = midCol;
 
                 for (int i = midCol, j = 0;
-                     i <= n && k > 0; ++i, k--, j++) {
+                     i <= n && k > 0 ; ++i, k--, j++) {
                     movement = new Tuple<>();
                     movement.setItem1(x+j);
                     movement.setItem2(i);
-                    movements.add(movement); //addCirclesToGridPane(circles, x + j, i);// matrix[x + j][i]
+
+                        movements.add(movement); //addCirclesToGridPane(circles, x + j, i);// matrix[x + j][i]
                 }
 
                 for (int i = n, j = 0;
-                     i-1 > midCol && k > 0; --i, k--, j++) {
+                     i-1 > midCol && k > 0 ; --i, k--, j++) {
                     movement = new Tuple<>();
                     movement.setItems((midRow) + j+2, i-1);
+
                     movements.add( movement);
                     //addCirclesToGridPane(matrix, circles, (midRow) + j+2, i-1);// matrix[(midRow) + j][i]);
                 }
 
-                for (int i = midCol - 1, j = 1;
-                     i+1 >= y && k > 0; --i, k--, j++) {
+                for (int i = midCol -1, j = 1;
+                     i+1 >= y && k > 0 && movements.size()<size; --i, k--, j++) { ///ovdje pogledaj
                     movement = new Tuple<>();
                     movement.setItems((n) - j, i+1);
-                    movements.add(movement);
+
+                        movements.add(movement);
                     //addCirclesToGridPane(matrix, circles, (n) - j, i+1);//matrix[(n) - j][i]);
                 }
 
                 for (int i = y + 1, j = 1;
-                     i < midCol && k > 0; ++i, k--, j++) {
+                     i < midCol && k > 0 ; ++i, k--, j++) {
                     movement = new Tuple<>();
                     movement.setItems((midRow) - j, i);
+
                     movements.add(movement);
                     //addCirclesToGridPane(matrix, circles, (midRow) - j, i);//matrix[(midRow) - j][i]);
                 }
-                if (x + 1 <= m - 1 && k > 0) {
+                if (x +1 <= m -1 && k > 0 ) {
                     // Recursive call
                     spiralDiamondViewEven(matrix, x +1,
-                            y +1, m - 1, n - 1, k,movements);
+                            y +1, m - 1, n - 1, k+9,movements,size);
                 }
 
 
             }
+
+    public static TextField getNodeByRowColumnIndex(final int row, final int column, GridPane gridPane) {
+        Node result = null;
+        ObservableList<Node> childrens = gridPane.getChildren();
+        for(Node node : childrens) {
+            if(gridPane.getRowIndex(node) == row && gridPane.getColumnIndex(node) == column) {
+                result = node;
+                break;
+            }
+        }
+        return (TextField)result;
+    }
+
+
 
 
         public void diamondSpiral(GridPane matrix)
@@ -213,7 +236,7 @@ public class DiamondShape implements Serializable {
             {
                 movementsEven=new LinkedList<>();
                 spiralDiamondViewEven(playField, 0, 0, row - 1,
-                    col - 1, (row * col) - ((col + 1) / 2) * 4,movementsEven);}
+                    col - 1, (row * col) - ((col + 1) / 2) * 4,movementsEven,playField.getColumnCount()*col/2);}
             else {
                 movementsOdd=new LinkedList<>();
                 spiralDiamondViewOdd(playField, 0, 0, row - 1,
@@ -228,9 +251,7 @@ public class DiamondShape implements Serializable {
     {
 
         playField.add(circles.get(c), b,a);
-        System.out.println("krugovi");
-                    c++;
-
+        c++;
     }
 
     public static  void drawMatrix(int xCoordinate,int yCoordinate)
@@ -239,8 +260,6 @@ public class DiamondShape implements Serializable {
         for (int j = 0; j < 1; j++) {
             circles.add(new Circle(10, Color.BLACK));
         }
-
-        System.out.println("brisanje");
         playField.getChildren().clear();
         int k=1;
         for (int y = 0; y < random; y++) {
@@ -260,12 +279,7 @@ public class DiamondShape implements Serializable {
             }
         }
         playField.add(circles.get(0),yCoordinate,xCoordinate);
-
-        System.out.println("moze");
-
-        System.out.println("iscrtavanje");
-
-
+        System.out.println(getNodeByRowColumnIndex(xCoordinate,yCoordinate,playField).getText());
         c=0;
 
     }
