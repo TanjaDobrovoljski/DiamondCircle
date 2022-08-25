@@ -7,7 +7,6 @@ import java.util.*;
 public class Deck {
     private LinkedList<Card> deck;
 
-
     public Deck()
     {
         deck=new LinkedList<>();
@@ -24,8 +23,6 @@ public class Deck {
         Collections.shuffle(deck);
 
     }
-
-
 
     public LinkedList<Card> getDeck() {
         return deck;

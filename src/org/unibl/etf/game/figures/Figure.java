@@ -5,6 +5,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 
 import javafx.scene.shape.Circle;
+import org.unibl.etf.game.cards.Deck;
 import org.unibl.etf.shape.DiamondShape;
 import org.unibl.etf.tools.GenLogger;
 import org.unibl.etf.tools.Tuple;
@@ -23,131 +24,96 @@ public class Figure extends Thread  implements Serializable {
     private static Integer idCounter = 1,uniqueID;
     private static int Id=1;
 
-    private boolean hasDiamond;
-    public static List<Tuple<Integer, Integer>> futureMovements,passedMovements=null;
-    private int numOfDiamonds;
-    private long startTime;
-    private static  Color color ;
+    protected boolean hasDiamond,alive;
+    protected static List<Tuple<Integer, Integer>> futureMovements,passedMovements;
+    protected  int numberOfMoves=1;
+    protected int numOfDiamonds;
+    private   Color color ;
     private DiamondShape dS;
+    private Deck gameDeck;
+
 
     public Figure()
     {
-
         uniqueID=idCounter++;
-        if(Id==1)
-        { color=Color.RED;
-                Id++;
-        }
-        else if(Id==2) {
-            color = Color.GREEN;
-            Id++;
-        }
-          else if(Id==3) {
-            color = Color.BLUE;
-            Id++;
-        }
-          else if(Id==4) {
-            color = Color.YELLOW;
-            Id = 1;
-        }
+
 
           this.numOfDiamonds=0;
           this.hasDiamond=false;
+          this.alive=true;
 
     }
 
-    public Figure(DiamondShape ds)
+    public Figure(DiamondShape ds, Deck deck)
     {
-
-        uniqueID=idCounter++;
-        if(Id==1)
-        { color=Color.RED;
-            Id++;
-        }
-        else if(Id==2) {
-            color = Color.GREEN;
-            Id++;
-        }
-        else if(Id==3) {
-            color = Color.BLUE;
-            Id++;
-        }
-        else if(Id==4) {
-            color = Color.YELLOW;
-            Id = 1;
-        }
 
         this.numOfDiamonds=0;
         this.hasDiamond=false;
         this.dS=ds;
+        this.gameDeck=deck;
+        this.alive=false;
         futureMovements=(DiamondShape.matrixSize) % 2 == 0 ? ds.getMovementsEven() : dS.getMovementsOdd();
+        passedMovements=new ArrayList<>();
 
     }
 
-    public int returnX()
-    {
-        return  getFutureMovements().get(0).getItem2();
-    }
-
-
+    static int k=0;
    @Override
     public  void  run()
     {
+        for (int i = 0; i < Figure.getFutureMovements().size(); i++)
+        {
+            try {
+                Platform.runLater(() -> {
+                    DiamondShape.drawMatrix( futureMovements.get(k).getItem1(),futureMovements.get(k).getItem2() );
+                    passedMovements.add(futureMovements.get(k));
+                    k++;
 
-       // Runnable task = () -> {
-          //  Platform.startup(() -> {
-        Platform.runLater(()-> {
-            long time = new Date().getTime();
-            List<Circle> circles = new ArrayList();
-            Figure.setFutureMovements((DiamondShape.matrixSize) % 2 == 0 ? dS.getMovementsEven() : dS.getMovementsOdd());
-            while (true) {
+                });
+
                 try {
-                    //prikaz figura kao krugova
-
-                    for (Tuple<Integer, Integer> lista : getFutureMovements()) {
-
-                        System.out.println("radi");
-                        //DiamondShape.addCirclesToGridPane(circles,lista.getItem1(),lista.getItem2());
-                        ///playField.add(circles.get(0),lista.getItem1(),lista.getItem2());
-
-                        //DiamondShape.drawMatrix(lista.getItem1(), lista.getItem2());
-                        System.out.println("poslije");
-                        try {
-                            sleep(1000);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                    }
-
-                } catch (Exception e) {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                System.out.println("I'm running later...");
             }
-        });
-    };
+            catch(Exception e){
+                e.printStackTrace();
+            }
+        }
 
-   /* public void test()
+    }
+
+    public void moveFigure()
     {
-        setFutureMovements((DiamondShape.matrixSize) % 2 == 0 ? DiamondShape.getMovementsEven() : DiamondShape.getMovementsOdd());
-        while (true) {
+        synchronized (this) {
+        for (int i = 0; i < Figure.getFutureMovements().size(); i++)
+        {
+            try {
+                Platform.runLater(() -> {
+                    DiamondShape.drawMatrix( futureMovements.get(k).getItem1(),futureMovements.get(k).getItem2() );
+                    passedMovements.add(futureMovements.get(k));
+                    k++;
 
-                //prikaz figura kao krugova
+                });
 
-                for (Tuple<Integer, Integer> lista : getFutureMovements()) {
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            catch(Exception e){
+                e.printStackTrace();
+            }
+        }
+        alive=false;
 
-                    System.out.println("radi");
-                    //DiamondShape.addCirclesToGridPane(circles,lista.getItem1(),lista.getItem2());
-                    ///playField.add(circles.get(0),lista.getItem1(),lista.getItem2());
-
-                    DiamondShape.drawMatrix(lista.getItem1(), lista.getItem2());
-                    System.out.println("poslije");
-                }}
-    }*/
+        }
+    }
 
 
-
-    public static  Color getColor() {
+    public   Color getColor() {
         return color;
     }
 
@@ -187,14 +153,6 @@ public class Figure extends Thread  implements Serializable {
         this.numOfDiamonds = numOdDiamons;
     }
 
-    public long getStartTime() {
-        return startTime;
-    }
-
-    public void setStartTime(long startTime) {
-        this.startTime = startTime;
-    }
-
     @Override
     public boolean equals(Object obj) {
         if (!(obj instanceof Figure) && obj != null)
@@ -206,6 +164,6 @@ public class Figure extends Thread  implements Serializable {
 
     @Override
     public String toString() {
-        return ", Figura "+uniqueID;
+        return "Figura "+uniqueID;
     }
 }

@@ -42,6 +42,7 @@ public class DiamondShape implements Serializable {
     private  List<Tuple<Integer, Integer>> movementsEven; //parni
     public static int matrixSize;
     public static int random=0;
+    private static int movementSize=0;
 
 
 
@@ -227,6 +228,7 @@ public class DiamondShape implements Serializable {
             // Get the size
             int row = playField.getRowCount();
             int col = playField.getColumnCount(); //matrix[0].length;
+            movementSize=playField.getColumnCount()*col/2;
             if (row != col )
             {
                 System.out.println("\nNot  odd square matrix");
@@ -236,7 +238,7 @@ public class DiamondShape implements Serializable {
             {
                 movementsEven=new LinkedList<>();
                 spiralDiamondViewEven(playField, 0, 0, row - 1,
-                    col - 1, (row * col) - ((col + 1) / 2) * 4,movementsEven,playField.getColumnCount()*col/2);}
+                    col - 1, (row * col) - ((col + 1) / 2) * 4,movementsEven,movementSize);}
             else {
                 movementsOdd=new LinkedList<>();
                 spiralDiamondViewOdd(playField, 0, 0, row - 1,
@@ -246,6 +248,14 @@ public class DiamondShape implements Serializable {
 
         }
 
+    public static int getMovementSize() {
+        return movementSize;
+    }
+
+    public static void setMovementSize(int movementSize) {
+        DiamondShape.movementSize = movementSize;
+    }
+
     private static int c=0;
     public static  void addCirclesToGridPane(List<Circle> circles, int a, int b) //dodavanje figura kao krugova
     {
@@ -254,13 +264,13 @@ public class DiamondShape implements Serializable {
         c++;
     }
 
-    public static  void drawMatrix(int xCoordinate,int yCoordinate)
+    public static synchronized void drawMatrix(int xCoordinate,int yCoordinate)
     {
         List<Circle> circles = new ArrayList(); //prikaz figura kao krugova
         for (int j = 0; j < 1; j++) {
             circles.add(new Circle(10, Color.BLACK));
         }
-        playField.getChildren().clear();
+        //playField.getChildren().clear();
         int k=1;
         for (int y = 0; y < random; y++) {
             for (int x = 0; x < random; x++) {
@@ -279,7 +289,6 @@ public class DiamondShape implements Serializable {
             }
         }
         playField.add(circles.get(0),yCoordinate,xCoordinate);
-        System.out.println(getNodeByRowColumnIndex(xCoordinate,yCoordinate,playField).getText());
         c=0;
 
     }

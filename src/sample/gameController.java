@@ -1,5 +1,6 @@
 package sample;
 import javafx.application.Platform;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -18,6 +19,8 @@ import org.unibl.etf.tools.Tuple;
 
 import java.net.URL;
 import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.unibl.etf.game.figures.Figure;
@@ -74,11 +77,12 @@ public class gameController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
-        OrdinaryCard o = new OrdinaryCard(4);
+        //OrdinaryCard o = new OrdinaryCard(4);
 
-        Image imProfile = new Image(getClass().getResourceAsStream(o.getSlika())); //ucitavanje slike
+        Image imProfile = new Image(getClass().getResourceAsStream("slika.JPG")); //ucitavanje slike
         cardImage.setImage(imProfile);
-        Deck gameDeck = new Deck();
+
+
 
     }
 
@@ -157,18 +161,21 @@ public class gameController implements Initializable {
     void startClicked(ActionEvent event)  {//exception za ponovno pokretanje ako vec igra traje
 
 
+        //ExecutorService threadPool= Executors.newWorkStealingPool();
         playField=matrixGame;
         DiamondShape d=new DiamondShape();
+       Deck gameDeck=new Deck();
         /*
         List<Circle> circles = new ArrayList(); //prikaz figura kao krugova
         for (int i = 0; i < 7 * 7; i++) {
             circles.add(new Circle(10, Color.BLACK));
         }
         d.addCirclesToGridPane( circles,4,0);*/
-        Figure f1=new Figure(d);
-        new Thread(()->{
+        Figure f1=new Figure(d,gameDeck);
+
+       /* new Thread(()->{
             statusBarShow();
-        }).start();
+        }).start();*/
 
 
       //  f1.test();
@@ -204,11 +211,6 @@ public class gameController implements Initializable {
     }
 static int k=0;
 private void statusBarShow() {
-
-    List<Circle> circles = new ArrayList(); //prikaz figura kao krugova
-    for (int j = 0; j < 100; j++) {
-        circles.add(new Circle(10, Color.BLACK));
-    }
 
     for (int i = 0; i < Figure.getFutureMovements().size(); i++)
     {
