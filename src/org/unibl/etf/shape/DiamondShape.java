@@ -61,8 +61,8 @@ public class DiamondShape implements Serializable {
 
                 // Create a new TextField in each Iteration
                 TextField tf = new TextField();
-                tf.setPrefHeight(170);
-                tf.setPrefWidth(170);
+                tf.setPrefHeight(200);
+                tf.setPrefWidth(200);
                 tf.setAlignment(Pos.CENTER);
                 tf.setEditable(true);
                 tf.setText(String.valueOf(k));
@@ -76,6 +76,14 @@ public class DiamondShape implements Serializable {
         matrixSize=playField.getColumnCount();
         matrix=playField;
         diamondSpiral(playField);
+    }
+
+    public List<Tuple<Integer, Integer>> getmovements()
+    {
+        if (matrixSize % 2 == 0)
+            return getMovementsEven();
+        else
+            return getMovementsOdd();
     }
 
     public GridPane getMatrix() {

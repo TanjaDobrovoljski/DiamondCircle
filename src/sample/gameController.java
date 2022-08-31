@@ -14,6 +14,7 @@ import javafx.scene.layout.GridPane;
 
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import org.unibl.etf.game.figures.GhostFigure;
 import org.unibl.etf.tools.Tuple;
 
 
@@ -165,14 +166,19 @@ public class gameController implements Initializable {
         playField=matrixGame;
         DiamondShape d=new DiamondShape();
        Deck gameDeck=new Deck();
+       Diamond diamond=new Diamond(1,1);
+
+
         /*
         List<Circle> circles = new ArrayList(); //prikaz figura kao krugova
         for (int i = 0; i < 7 * 7; i++) {
             circles.add(new Circle(10, Color.BLACK));
         }
         d.addCirclesToGridPane( circles,4,0);*/
-        Figure f1=new Figure(d,gameDeck);
-
+        //Figure f1=new Figure(d,gameDeck);
+        GhostFigure g=new GhostFigure(d,gameDeck);
+        g.playGhost(d);
+        //g.start();
        /* new Thread(()->{
             statusBarShow();
         }).start();*/

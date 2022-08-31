@@ -4,7 +4,7 @@ public class SpecialCard extends Card{
 
     public SpecialCard() {
         super();
-        this.image=this.getSlika()+"diamond.png";
+        this.image=this.getSlika()+"diamondCard.png";
     }
 
 }

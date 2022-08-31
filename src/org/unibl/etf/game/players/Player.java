@@ -23,7 +23,7 @@ public class Player {
     {
         try {
             BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter("IGRA_"+ LocalDate.now()+".txt"));
-            bufferedWriter.write("0");
+            bufferedWriter.write("");
             bufferedWriter.close();
         }
         catch (IOException ioException){

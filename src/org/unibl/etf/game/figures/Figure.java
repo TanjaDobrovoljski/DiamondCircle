@@ -29,7 +29,7 @@ public class Figure extends Thread  implements Serializable {
     protected  int numberOfMoves=1;
     protected int numOfDiamonds;
     private   Color color ;
-    private DiamondShape dS;
+    protected DiamondShape dS;
     private Deck gameDeck;
 
 
